@@ -34,3 +34,7 @@ fun calculateDistance(
     val c = 2 * atan2(sqrt(a), sqrt(1 - a))
     return EARTH_RADIUS * c;
 }
+
+fun calculateDistanceScore(inputSize: Int, cityNameSize: Int) : Double {
+    return inputSize.toDouble() / cityNameSize.toDouble()
+}
