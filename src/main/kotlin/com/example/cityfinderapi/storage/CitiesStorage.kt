@@ -14,7 +14,7 @@ class CitiesStorage(private val cityParser: CsvCitiesParser) {
     @EventListener(ApplicationReadyEvent::class)
     fun initStorage() {
         if (cities.isEmpty()) {
-            try{
+            try {
                 log.info { "Starting parsing cities file..." }
                 cities.addAll(cityParser.parseCities())
                 log.info { "${cities.size} cities has been parsed successfully!" }
@@ -25,7 +25,11 @@ class CitiesStorage(private val cityParser: CsvCitiesParser) {
     }
 
     fun findByStartsWith(input: String) =
-        cities.filter { it.cityAscii.startsWith(input) }
+        cities.filter {
+            it.cityAscii
+                .lowercase()
+                .startsWith(input.lowercase())
+        }
 
     companion object {
         private val log = KotlinLogging.logger {}
