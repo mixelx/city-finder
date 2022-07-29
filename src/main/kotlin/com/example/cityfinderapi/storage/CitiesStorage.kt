@@ -2,6 +2,7 @@ package com.example.cityfinderapi.storage
 
 import com.example.cityfinderapi.component.CsvCitiesParser
 import com.example.cityfinderapi.dto.RawCity
+import mu.KotlinLogging
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -13,10 +14,20 @@ class CitiesStorage(private val cityParser: CsvCitiesParser) {
     @EventListener(ApplicationReadyEvent::class)
     fun initStorage() {
         if (cities.isEmpty()) {
-            cities.addAll(cityParser.parseCities())
+            try{
+                log.info { "Starting parsing cities file..." }
+                cities.addAll(cityParser.parseCities())
+                log.info { "${cities.size} cities has been parsed successfully!" }
+            } catch (ex: Exception) {
+                log.error { "Caught exception during parsing cities file: $ex" }
+            }
         }
     }
 
     fun findByStartsWith(input: String) =
         cities.filter { it.cityAscii.startsWith(input) }
+
+    companion object {
+        private val log = KotlinLogging.logger {}
+    }
 }
